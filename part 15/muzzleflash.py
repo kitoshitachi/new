@@ -14,6 +14,7 @@ class MuzzleFlash(pg.sprite.Sprite):
         self.pos = pos
         self.rect.center = pos
         self.spawn_time = pg.time.get_ticks()
+        self.hit_rect = PLAYER_HIT_RECT
 
     def update(self):
         if pg.time.get_ticks() - self.spawn_time > FLASH_DURATION:
