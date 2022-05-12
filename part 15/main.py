@@ -6,9 +6,11 @@ import pygame as pg
 import sys
 from os import path
 from settings import *
-from sprites import *
 from tilemap import *
-
+from mob import Mob
+from player import Player
+from obstacle import Obstacle
+from collision import collide_hit_rect
 # HUD functions
 def draw_player_health(surf, x, y, pct):
     if pct < 0:
@@ -57,14 +59,7 @@ class Game:
         self.walls = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         self.bullets = pg.sprite.Group()
-        # for row, tiles in enumerate(self.map.data):
-        #     for col, tile in enumerate(tiles):
-        #         if tile == '1':
-        #             Wall(self, col, row)
-        #         if tile == 'M':
-        #             Mob(self, col, row)
-        #         if tile == 'P':
-        #             self.player = Player(self, col, row)
+
         for tile_object in self.map.tmxdata.objects:
             if tile_object.name == 'player':
                 self.player = Player(self, tile_object.x, tile_object.y)
@@ -97,16 +92,16 @@ class Game:
         hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
         for hit in hits:
             self.player.health -= MOB_DAMAGE
-            hit.vel = vec(0, 0)
+            hit.vel = pg.math.Vector2(0, 0)
             if self.player.health <= 0:
                 self.playing = False
         if hits:
-            self.player.pos += vec(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
+            self.player.pos += pg.math.Vector2(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
         # bullets hit mobs
         hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True)
         for hit in hits:
             hit.health -= BULLET_DAMAGE
-            hit.vel = vec(0, 0)
+            hit.vel = pg.math.Vector2(0, 0)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
