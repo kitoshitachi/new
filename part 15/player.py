@@ -1,6 +1,6 @@
 import pygame as pg
 from settings import *
-from collision import collide_with_walls
+from collision import collide_horizontal, collide_vertical, slide
 from bullet import Bullet
 from muzzleflash import MuzzleFlash
 
@@ -49,9 +49,11 @@ class Player(pg.sprite.Sprite):
         self.image = pg.transform.rotate(self.game.player_img, self.rot)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
+        
         self.pos += self.vel * self.game.dt
+
         self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
+        collide_horizontal(self, self.game.walls,'slide')
         self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
+        collide_vertical(self, self.game.walls,'slide')
         self.rect.center = self.hit_rect.center

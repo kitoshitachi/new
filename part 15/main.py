@@ -72,9 +72,7 @@ class Game:
         self.draw_debug = False
 
     def run(self):
-        # game loop - set self.playing = False to end the game
-        self.playing = True
-        while self.playing:
+        while True:
             self.dt = self.clock.tick(FPS) / 1000.0  # fix for Python 2.x
             self.events()
             self.update()
@@ -103,17 +101,10 @@ class Game:
             hit.health -= BULLET_DAMAGE
             hit.vel = pg.math.Vector2(0, 0)
 
-    def draw_grid(self):
-        for x in range(0, WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
-
     def draw(self):
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-        # self.screen.fill(BGCOLOR)
+        self.screen.fill(BGCOLOR)
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-        # self.draw_grid()
         for sprite in self.all_sprites:
             if isinstance(sprite, Mob):
                 sprite.draw_health()
@@ -148,8 +139,6 @@ class Game:
 
 # create the game object
 g = Game()
-g.show_start_screen()
 while True:
     g.new()
     g.run()
-    g.show_go_screen()

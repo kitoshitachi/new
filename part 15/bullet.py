@@ -1,9 +1,10 @@
 from random import uniform
 import pygame as pg
 from settings import *
+from collision import collide_horizontal, collide_vertical,reflect
 
 class Bullet(pg.sprite.Sprite):
-    def __init__(self, game, pos, dir):
+    def __init__(self, game, pos, dir:pg.math.Vector2):
         self._layer = BULLET_LAYER
         self.groups = game.all_sprites, game.bullets
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -15,12 +16,17 @@ class Bullet(pg.sprite.Sprite):
         self.rect.center = pos
         spread = uniform(-GUN_SPREAD, GUN_SPREAD)
         self.vel = dir.rotate(spread) * BULLET_SPEED
-        self.spawn_time = pg.time.get_ticks()
+        self.alive = 5
 
     def update(self):
         self.pos += self.vel * self.game.dt
         self.rect.center = self.pos
-        if pg.sprite.spritecollideany(self, self.game.walls):
-            self.kill()
-        if pg.time.get_ticks() - self.spawn_time > BULLET_LIFETIME:
+
+        self.hit_rect.centerx = self.pos.x
+
+        collide_horizontal(self, self.game.walls,'reflect')
+        self.hit_rect.centery = self.pos.y
+        collide_vertical(self, self.game.walls, 'reflect')
+
+        if self.alive < 0:
             self.kill()

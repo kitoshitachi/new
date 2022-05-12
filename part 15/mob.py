@@ -1,7 +1,7 @@
 from random import choice
 import pygame as pg
 from settings import *
-from collision import collide_with_walls
+from collision import collide_horizontal, collide_vertical, slide
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self._layer = MOB_LAYER
@@ -40,9 +40,9 @@ class Mob(pg.sprite.Sprite):
         self.vel += self.acc * self.game.dt
         self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
         self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
+        collide_horizontal(self, self.game.walls,'slide')
         self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
+        collide_vertical(self, self.game.walls,'slide')
         self.rect.center = self.hit_rect.center
         if self.health <= 0:
             self.kill()
