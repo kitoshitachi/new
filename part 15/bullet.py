@@ -20,13 +20,14 @@ class Bullet(pg.sprite.Sprite):
 
     def update(self):
         self.pos += self.vel * self.game.dt
-        self.rect.center = self.pos
 
         self.hit_rect.centerx = self.pos.x
-
         collide_horizontal(self, self.game.walls,'reflect')
+
         self.hit_rect.centery = self.pos.y
         collide_vertical(self, self.game.walls, 'reflect')
+        
+        self.rect.center = self.pos
 
         if self.alive < 0:
             self.kill()
