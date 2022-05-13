@@ -1,7 +1,7 @@
 from random import choice
 import pygame as pg
 from settings import *
-from collision import collide_horizontal, collide_vertical, slide
+from collision import collide_horizontal, collide_vertical
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self._layer = MOB_LAYER
