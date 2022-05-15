@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="98">
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="109">
  <tileset firstgid="1" name="spritesheet_tiles" tilewidth="64" tileheight="64" spacing="10" tilecount="540" columns="27">
   <image source="../img/spritesheet_tiles.png" width="1988" height="1470"/>
   <wangsets>
@@ -241,5 +241,16 @@
   <object id="92" name="zombie" x="1504" y="736" width="32" height="32"/>
   <object id="93" name="zombie" x="1856" y="752" width="32" height="32"/>
   <object id="94" name="zombie" x="1872" y="576" width="32" height="32"/>
+  <object id="98" name="player" x="482" y="82" width="32" height="32"/>
+  <object id="99" name="player" x="1030" y="146" width="32" height="32"/>
+  <object id="100" name="player" x="968" y="470" width="32" height="32"/>
+  <object id="101" name="player" x="300" y="902" width="32" height="32"/>
+  <object id="102" name="player" x="562" y="1136" width="32" height="32"/>
+  <object id="103" name="player" x="914" y="1406" width="32" height="32"/>
+  <object id="104" name="player" x="1388" y="1396" width="32" height="32"/>
+  <object id="105" name="player" x="1694" y="1078" width="32" height="32"/>
+  <object id="106" name="player" x="2438" y="1118" width="32" height="32"/>
+  <object id="107" name="player" x="2864" y="582" width="32" height="32"/>
+  <object id="108" name="player" x="2048" y="192" width="32" height="32"/>
  </objectgroup>
 </map>

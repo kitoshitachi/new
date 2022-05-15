@@ -2,6 +2,7 @@
 # Tile-based game - Part 15
 # Simple Visual Effects (and a bug fix)
 # Video link: https://youtu.be/ZapYMuV8f1g
+from random import sample
 import pygame as pg
 import sys
 from os import path
@@ -12,27 +13,13 @@ from player import Player
 from obstacle import Obstacle
 from collision import collide_hit_rect
 # HUD functions
-def draw_player_health(surf, x, y, pct):
-	if pct < 0:
-		pct = 0
-	BAR_LENGTH = 100
-	BAR_HEIGHT = 20
-	fill = pct * BAR_LENGTH
-	outline_rect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
-	fill_rect = pg.Rect(x, y, fill, BAR_HEIGHT)
-	if pct > 0.6:
-		col = GREEN
-	elif pct > 0.3:
-		col = YELLOW
-	else:
-		col = RED
-	pg.draw.rect(surf, col, fill_rect)
-	pg.draw.rect(surf, WHITE, outline_rect, 2)
+
 
 class Level:
 	def __init__(self,map_name):
 		pg.init()
-		self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+		self.screen = pg.display.set_mode()#set_mode((WIDTH, HEIGHT))
+		self.rect = self.screen.get_rect()
 		pg.display.set_caption(TITLE)
 		self.clock = pg.time.Clock()
 		
@@ -60,17 +47,23 @@ class Level:
 		self.walls = pg.sprite.Group()
 		self.mobs = pg.sprite.Group()
 		self.bullets = pg.sprite.Group()
-
+		self.start = []
 		for tile_object in self.map.tmxdata.objects:
 			if tile_object.name == 'player':
-				self.player = Player(self, tile_object.x, tile_object.y)
+				# Player(self, tile_object.x, tile_object.y)
+				self.start.append((tile_object.x,tile_object.y))
 			if tile_object.name == 'zombie':
 				Mob(self, tile_object.x, tile_object.y)
 			if tile_object.name == 'wall':
 				Obstacle(self, tile_object.x, tile_object.y,
 						 tile_object.width, tile_object.height)
-		self.camera = Camera(self.map.width, self.map.height)
+		self.camera_left = Camera(self.map.width, self.map.height)
+		# self.camera_right = Camera(self.map.width, self.map.height)
 		self.draw_debug = False
+
+	def create_player(self):
+		pos = sample(self.start, 1)
+		self.player = [Player(self,pos_x,pos_y) for pos_x,pos_y in pos]
 
 	def run(self):
 		while True:
@@ -118,11 +111,10 @@ class Level:
 
 		# pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2)
 		# HUD functions
-		draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
+		#draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
 		pg.display.flip()
 
 	def events(self):
-		# catch all events here
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
 				self.quit()
@@ -135,7 +127,7 @@ class Level:
 class Game:
 	def __init__(self):
 		pg.init()
-		self.screen = pg.display.set_mode((WIDTH, HEIGHT), pg.RESIZABLE | pg.SCALED)
+		self.screen = pg.display.set_mode()#(WIDTH, HEIGHT), pg.RESIZABLE | pg.SCALED)
 		pg.display.set_caption('Magic Bullet')
 		self.level = Level('level1.tmx')
 		self.clock = pg.time.Clock()
@@ -147,16 +139,11 @@ class Game:
 					pg.quit()
 					sys.exit()
 			self.level.new()
+			self.level.create_player()
 			self.level.run()
 
 if __name__ == '__main__':
 	game = Game()
 	game.run()
-
-# # create the game object
-# g = Game()
-# while True:
-# 	g.new()
-# 	g.run()
 
 

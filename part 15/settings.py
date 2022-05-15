@@ -1,7 +1,9 @@
+from dataclasses import dataclass
+from attr import frozen
 import pygame as pg
 pg.math.Vector2 = pg.math.Vector2
 
-# define some colors (R, G, B)
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 DARKGREY = (40, 40, 40)
@@ -13,17 +15,17 @@ BROWN = (106, 55, 5)
 CYAN = (0, 255, 255)
 
 # game settings
-WIDTH = 1024   # 16 * 64 or 32 * 32 or 64 * 16
-HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
+WIDTH = 32 * 16 * 2
+HEIGHT = 32 * 9 * 2 
 FPS = 60
-TITLE = "Tilemap Demo"
+TITLE = "Magic bullet"
 BGCOLOR = BROWN
 
 TILESIZE = 64
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 
-WALL_IMG = 'tileGreen_39.png'
+WALL_IMG = 'tileGreen_39.png'   
 
 # Player settings
 PLAYER_HEALTH = 100
@@ -46,10 +48,11 @@ BULLET_DAMAGE = 10
 MOB_IMG = 'zombie1_hold.png'
 MOB_SPEEDS = [150, 100, 75, 125]
 MOB_HIT_RECT = pg.Rect(0, 0, 30, 30)
-MOB_HEALTH = 100
 MOB_DAMAGE = 10
 MOB_KNOCKBACK = 20
 AVOID_RADIUS = 50
+MOB_HEALTH = 100
+MOB_MANA = [2,3,2,4]
 
 # Effects
 MUZZLE_FLASHES = ['whitePuff15.png', 'whitePuff16.png', 'whitePuff17.png',
