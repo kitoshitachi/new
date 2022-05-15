@@ -22,6 +22,7 @@ class Mob(pg.sprite.Sprite):
 		self.health = MOB_HEALTH
 		self.speed = choice(MOB_SPEEDS)
 		self.mana = MOB_MANA
+		self.start_rand = 0
 
 	def avoid_mobs(self):
 		for mob in self.level.mobs:
@@ -48,16 +49,18 @@ class Mob(pg.sprite.Sprite):
 		pass
 
 	def rotate(self):
-		if self.player != None:
-			self.angle = (self.player.pos - self.pos).angle_to(pg.math.Vector2(1, 0))
-		else:
-			self.angle = randrange(0,360)
+		
 		self.image = pg.transform.rotate(self.level.mob_img, self.angle)
 		self.rect = self.image.get_rect()
 		self.rect.center = self.pos
 
 	def update(self):
-		
+		now = pg.time.get_ticks()
+		if self.player != None:
+			self.angle = (self.player.pos - self.pos).angle_to(pg.math.Vector2(1, 0))
+		elif now - self.start_rand >= RAND_DURATION:
+			self.start_rand = now
+			self.angle = randrange(361)
 		self.rotate()
 		self.move()
 

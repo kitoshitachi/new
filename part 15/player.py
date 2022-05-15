@@ -5,7 +5,6 @@ from bullet import Bullet
 from muzzleflash import MuzzleFlash
 
 
-
 class Player(pg.sprite.Sprite):
 	def __init__(self, level, x, y):
 		self._layer = PLAYER_LAYER
@@ -15,7 +14,7 @@ class Player(pg.sprite.Sprite):
 		self.image = level.player_img
 		self.rect = self.image.get_rect()
 		self.rect.center = (x, y)
-		self.hit_rect = PLAYER_HIT_RECT
+		self.hit_rect = PLAYER_HIT_RECT.copy()
 		self.hit_rect.center = self.rect.center
 		self.direction = pg.math.Vector2(0, 0)
 		self.pos = pg.math.Vector2(x, y)
@@ -23,36 +22,6 @@ class Player(pg.sprite.Sprite):
 		self.last_shot = 0
 		self.start_stunt = 0
 		self.health = PLAYER_HEALTH
-
-	def input(self, now):
-		self.rot_speed = 0
-		keys = pg.key.get_pressed()
-		if keys[pg.K_j]:
-			self.rot_speed = PLAYER_ROT_SPEED
-		elif keys[pg.K_k]:
-			self.rot_speed = -PLAYER_ROT_SPEED
-
-		if keys[pg.K_w]:
-			self.direction.y = -1
-		elif keys[pg.K_s]:
-			self.direction.y = 1
-		else:
-			self.direction.y = 0
-		
-		if keys[pg.K_a]:
-			self.direction.x = -1
-		elif keys[pg.K_d]:
-			self.direction.x = 1
-		else:
-			self.direction.x = 0
-
-		if self.direction.magnitude() != 0:
-			self.direction.normalize_ip()
-
-		if keys[pg.K_l]:
-			if now - self.last_shot > BULLET_RATE:
-				self.last_shot = now
-				self.shot()
 
 	def shot(self):
 		dir = pg.math.Vector2(1, 0).rotate(-self.angle)
@@ -101,7 +70,6 @@ class Player(pg.sprite.Sprite):
 
 
 	def update(self):
-		# self.draw_bar(self.level.screen,self.level)
 		now = pg.time.get_ticks()
 		if now - self.start_stunt > STUNT_DURATION:
 			self.input(now)
@@ -111,5 +79,64 @@ class Player(pg.sprite.Sprite):
 		self.move()
 
 
-		
+class Player1(Player):
+	def input(self, now):
+		self.rot_speed = 0
+		keys = pg.key.get_pressed()
+		if keys[pg.K_g]:
+			self.rot_speed = PLAYER_ROT_SPEED
+		elif keys[pg.K_h]:
+			self.rot_speed = -PLAYER_ROT_SPEED
 
+		if keys[pg.K_w]:
+			self.direction.y = -1
+		elif keys[pg.K_s]:
+			self.direction.y = 1
+		else:
+			self.direction.y = 0
+		
+		if keys[pg.K_a]:
+			self.direction.x = -1
+		elif keys[pg.K_d]:
+			self.direction.x = 1
+		else:
+			self.direction.x = 0
+
+		if self.direction.magnitude() != 0:
+			self.direction.normalize_ip()
+
+		if keys[pg.K_j]:
+			if now - self.last_shot > BULLET_RATE:
+				self.last_shot = now
+				self.shot()
+
+class Player2(Player):
+	def input(self, now):
+		self.rot_speed = 0
+		keys = pg.key.get_pressed()
+		if keys[pg.K_i]:
+			self.rot_speed = PLAYER_ROT_SPEED
+		elif keys[pg.K_o]:
+			self.rot_speed = -PLAYER_ROT_SPEED
+
+		if keys[pg.K_UP]:
+			self.direction.y = -1
+		elif keys[pg.K_DOWN]:
+			self.direction.y = 1
+		else:
+			self.direction.y = 0
+		
+		if keys[pg.K_LEFT]:
+			self.direction.x = -1
+		elif keys[pg.K_RIGHT]:
+			self.direction.x = 1
+		else:
+			self.direction.x = 0
+
+		if self.direction.magnitude() != 0:
+			self.direction.normalize_ip()
+
+		if keys[pg.K_p]:
+			if now - self.last_shot > BULLET_RATE:
+				self.last_shot = now
+				self.shot()

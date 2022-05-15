@@ -15,8 +15,9 @@ BROWN = (106, 55, 5)
 CYAN = (0, 255, 255)
 
 # game settings
-WIDTH = 32 * 16 * 2
-HEIGHT = 32 * 9 * 2 
+WIDTH = 32 * 32
+
+HEIGHT = 32 * 18 
 FPS = 60
 TITLE = "Magic bullet"
 BGCOLOR = BROWN
@@ -53,7 +54,7 @@ MOB_KNOCKBACK = 20
 AVOID_RADIUS = 50
 MOB_HEALTH = 100
 MOB_MANA = [2,3,2,4]
-
+RAND_DURATION = 2000
 # Effects
 MUZZLE_FLASHES = ['whitePuff15.png', 'whitePuff16.png', 'whitePuff17.png',
                   'whitePuff18.png']
