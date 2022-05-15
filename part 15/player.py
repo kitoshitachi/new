@@ -15,45 +15,70 @@ class Player(pg.sprite.Sprite):
         self.rect.center = (x, y)
         self.hit_rect = PLAYER_HIT_RECT
         self.hit_rect.center = self.rect.center
-        self.vel = pg.math.Vector2(0, 0)
+        self.direction = pg.math.Vector2(0, 0)
         self.pos = pg.math.Vector2(x, y)
-        self.rot = 0
+        self.angle = 0
         self.last_shot = 0
+        self.start_stunt = 0
         self.health = PLAYER_HEALTH
 
-    def get_keys(self):
+    def input(self, now):
         self.rot_speed = 0
-        self.vel = pg.math.Vector2(0, 0)
         keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT] or keys[pg.K_a]:
+        if keys[pg.K_j]:
             self.rot_speed = PLAYER_ROT_SPEED
-        if keys[pg.K_RIGHT] or keys[pg.K_d]:
+        elif keys[pg.K_k]:
             self.rot_speed = -PLAYER_ROT_SPEED
-        if keys[pg.K_UP] or keys[pg.K_w]:
-            self.vel = pg.math.Vector2(PLAYER_SPEED, 0).rotate(-self.rot)
-        if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.vel = pg.math.Vector2(-PLAYER_SPEED / 2, 0).rotate(-self.rot)
+
+        if keys[pg.K_w]:
+            self.direction.y = -1
+        elif keys[pg.K_s]:
+            self.direction.y = 1
+        else:
+            self.direction.y = 0
+        
+        if keys[pg.K_a]:
+            self.direction.x = -1
+        elif keys[pg.K_d]:
+            self.direction.x = 1
+        else:
+            self.direction.x = 0
+
+        if self.direction.magnitude() != 0:
+            self.direction.normalize_ip()
+
         if keys[pg.K_SPACE]:
-            now = pg.time.get_ticks()
             if now - self.last_shot > BULLET_RATE:
                 self.last_shot = now
-                dir = pg.math.Vector2(1, 0).rotate(-self.rot)
-                pos = self.pos + BARREL_OFFSET.rotate(-self.rot)
-                Bullet(self.game, pos, dir)
-                self.vel = pg.math.Vector2(-KICKBACK, 0).rotate(-self.rot)
-                MuzzleFlash(self.game, pos)
+                self.shot()
 
-    def update(self):
-        self.get_keys()
-        self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
-        self.image = pg.transform.rotate(self.game.player_img, self.rot)
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
-        
-        self.pos += self.vel * self.game.dt
+    def shot(self):
+        dir = pg.math.Vector2(1, 0).rotate(-self.angle)
+        pos = self.pos + BARREL_OFFSET.rotate(-self.angle)
+        Bullet(self.game, pos, dir)
+        MuzzleFlash(self.game, pos)
+
+    def move(self):
+        self.pos += self.direction * PLAYER_SPEED * self.game.dt
 
         self.hit_rect.centerx = self.pos.x
         collide_horizontal(self, self.game.walls,'slide')
         self.hit_rect.centery = self.pos.y
         collide_vertical(self, self.game.walls,'slide')
         self.rect.center = self.hit_rect.center
+
+    def rotate(self):
+        self.angle = (self.angle + self.rot_speed * self.game.dt) % 360
+        self.image = pg.transform.rotate(self.game.player_img, self.angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+
+    def update(self):
+        now = pg.time.get_ticks()
+        if now - self.start_stunt > STUNT_DURATION:
+            self.input(now)
+
+        self.rotate()
+        self.move()
+        
+

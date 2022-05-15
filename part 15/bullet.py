@@ -1,7 +1,7 @@
 from random import uniform
 import pygame as pg
 from settings import *
-from collision import collide_horizontal, collide_vertical,reflect
+from collision import collide_horizontal, collide_vertical
 
 class Bullet(pg.sprite.Sprite):
     def __init__(self, game, pos, dir:pg.math.Vector2):
@@ -14,12 +14,12 @@ class Bullet(pg.sprite.Sprite):
         self.hit_rect = self.rect
         self.pos = pg.math.Vector2(pos)
         self.rect.center = pos
-        spread = uniform(-GUN_SPREAD, GUN_SPREAD)
-        self.vel = dir.rotate(spread) * BULLET_SPEED
+        # spread = uniform(-GUN_SPREAD, GUN_SPREAD)
+        self.direction = dir#.rotate(spread) 
         self.alive = 5
 
     def update(self):
-        self.pos += self.vel * self.game.dt
+        self.pos += self.direction * BULLET_SPEED * self.game.dt
 
         self.hit_rect.centerx = self.pos.x
         collide_horizontal(self, self.game.walls,'reflect')

@@ -7,12 +7,12 @@ NV = lambda x: -1 if x > 0 else 1
 
 def slide(sprite,dir):
     if dir == 'x':
-        sprite.vel.x = 0
+        sprite.direction.x = 0
     else:
-        sprite.vel.y = 0
+        sprite.direction.y = 0
 
 def reflect(sprite,NV):
-    sprite.vel.reflect_ip(NV)
+    sprite.direction.reflect_ip(NV)
     if sprite.alive:
         sprite.alive -= 1
 
@@ -27,7 +27,7 @@ def collide_horizontal(sprite, group, respone):
         if respone == 'slide':
             slide(sprite,'x')
         else:
-            reflect(sprite,(NV(sprite.vel.x),0))
+            reflect(sprite,(NV(sprite.direction.x),0))
 
 
 def collide_vertical(sprite,group, respone):
@@ -41,4 +41,4 @@ def collide_vertical(sprite,group, respone):
         if respone == 'slide':
             slide(sprite,'y')
         else:
-            reflect(sprite,(0,NV(sprite.vel.y)))
+            reflect(sprite,(0,NV(sprite.direction.y)))

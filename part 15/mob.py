@@ -14,10 +14,10 @@ class Mob(pg.sprite.Sprite):
         self.hit_rect = MOB_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
         self.pos = pg.math.Vector2(x, y)
-        self.vel = pg.math.Vector2(0, 0)
+        self.direction = pg.math.Vector2(0, 0)
         self.acc = pg.math.Vector2(0, 0)
         self.rect.center = self.pos
-        self.rot = 0
+        self.angle = 0
         self.health = MOB_HEALTH
         self.speed = choice(MOB_SPEEDS)
 
@@ -28,22 +28,30 @@ class Mob(pg.sprite.Sprite):
                 if 0 < dist.length() < AVOID_RADIUS:
                     self.acc += dist.normalize()
 
-    def update(self):
-        self.rot = (self.game.player.pos - self.pos).angle_to(pg.math.Vector2(1, 0))
-        self.image = pg.transform.rotate(self.game.mob_img, self.rot)
-        # self.rect = self.image.get_rect()
-        self.rect.center = self.pos
-        self.acc = pg.math.Vector2(1, 0).rotate(-self.rot)
+    def move(self):
+        self.acc = pg.math.Vector2(1, 0).rotate(-self.angle)
         self.avoid_mobs()
         self.acc.scale_to_length(self.speed)
-        self.acc += self.vel * -1
-        self.vel += self.acc * self.game.dt
-        self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
+        self.acc += self.direction * -1
+        self.direction += self.acc * self.game.dt
+        self.pos += self.direction * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
         self.hit_rect.centerx = self.pos.x
         collide_horizontal(self, self.game.walls,'slide')
         self.hit_rect.centery = self.pos.y
         collide_vertical(self, self.game.walls,'slide')
         self.rect.center = self.hit_rect.center
+
+    def rotate(self):
+        self.angle = (self.game.player.pos - self.pos).angle_to(pg.math.Vector2(1, 0))
+        self.image = pg.transform.rotate(self.game.mob_img, self.angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+
+    def update(self):
+        
+        self.rotate()
+        self.move()
+
         if self.health <= 0:
             self.kill()
 
