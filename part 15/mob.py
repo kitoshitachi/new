@@ -2,6 +2,7 @@ from random import choice, randrange
 import pygame as pg
 from settings import *
 from collision import collide_horizontal, collide_vertical
+
 class Mob(pg.sprite.Sprite):
 	def __init__(self, level, x, y):
 		self._layer = MOB_LAYER
@@ -38,7 +39,6 @@ class Mob(pg.sprite.Sprite):
 		self.acc += self.direction * -1
 		self.direction += self.acc * self.level.dt
 		self.pos += self.direction * self.level.dt + 0.5 * self.acc * self.level.dt ** 2
-
 		self.hit_rect.centerx = self.pos.x
 		collide_horizontal(self, self.level.walls,'slide')
 		self.hit_rect.centery = self.pos.y

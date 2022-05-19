@@ -14,7 +14,6 @@ from obstacle import Obstacle
 from collision import collide_hit_rect
 # HUD functions
 
-
 class Level:
 	def __init__(self,map_name):
 		pg.init()
@@ -99,17 +98,6 @@ class Level:
 
 	def draw(self):
 		pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
-		# self.screen.fill(BGCOLOR)
-		# self.screen.blit(self.map_img, self.camera_left.apply_rect(self.map_rect))
-		# for sprite in self.all_sprites:
-		# 	if isinstance(sprite, Mob):
-		# 		sprite.draw_health()
-		# 	self.screen.blit(sprite.image, self.camera_left.apply(sprite))
-		# 	if self.draw_debug:
-		# 		pg.draw.rect(self.camera_left.surf, CYAN, self.camera_left.apply_rect(sprite.hit_rect), 1)
-		# if self.draw_debug:
-		# 	for wall in self.walls:
-		# 		pg.draw.rect(self.screen, CYAN, self.camera_left.apply_rect(wall.rect), 1)
 
 		self.camera_left.surf.fill(BGCOLOR)
 		self.camera_right.surf.fill(BGCOLOR)
@@ -132,6 +120,8 @@ class Level:
 				pg.draw.rect(self.camera_left.surf, CYAN, self.camera_left.apply_rect(wall.rect), 1)
 				pg.draw.rect(self.camera_right.surf, CYAN, self.camera_right.apply_rect(wall.rect), 1)
 
+		self.draw_bar(self.camera_left.surf, 10, 10, self.player[0].health / PLAYER_HEALTH)
+		self.draw_bar(self.camera_right.surf, WIDTH/2 + 10, 10, self.player[0].health / PLAYER_HEALTH)
 
 		self.screen.fill(BGCOLOR)
 		self.screen.blit(self.camera_left.surf, (0, 0))
@@ -139,8 +129,25 @@ class Level:
 
 		# pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2)
 		# HUD functions
-		#draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
 		pg.display.flip()
+
+	@staticmethod
+	def draw_bar(surf, x, y, pct):
+		if pct < 0:
+			pct = 0
+		BAR_LENGTH = 100
+		BAR_HEIGHT = 20
+		fill = pct * BAR_LENGTH
+		outline_rect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+		fill_rect = pg.Rect(x, y, fill, BAR_HEIGHT)
+		if pct > 0.6:
+			col = GREEN
+		elif pct > 0.3:
+			col = YELLOW
+		else:
+			col = RED
+		pg.draw.rect(surf, col, fill_rect)
+		pg.draw.rect(surf, WHITE, outline_rect, 2)
 
 	def events(self):
 		for event in pg.event.get():
